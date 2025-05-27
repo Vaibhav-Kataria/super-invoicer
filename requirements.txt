@@ -1,14 +1,9 @@
 streamlit
 pandas
 numpy
-datetime
-time
-uuid
-io
+reportlab
 reportlab.lib.pagesizes
 reportlab.platypus
 reportlab.lib.styles
 reportlab.lib
 reportlab.lib.units
-base64
-PIL
