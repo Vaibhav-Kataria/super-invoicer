@@ -2,7 +2,6 @@ streamlit
 pandas
 numpy
 datetime
-os
 time
 uuid
 io
