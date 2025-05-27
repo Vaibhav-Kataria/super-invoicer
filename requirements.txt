@@ -2,8 +2,3 @@ streamlit
 pandas
 numpy
 reportlab
-reportlab.lib.pagesizes
-reportlab.platypus
-reportlab.lib.styles
-reportlab.lib
-reportlab.lib.units
