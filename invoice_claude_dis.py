@@ -126,7 +126,8 @@ def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
         updated_invoices.to_excel(file_path, index=False)
     except Exception as e:
         print("Exception occurred:")
-        traceback.print_exc()
+        st.write(e)
+        # traceback.print_exc()
         st.write("Unable to proceed with appending records")
     return True
 
