@@ -665,7 +665,30 @@ def main():
                         'tax_amount': prices_list[i] * quantity * tax_rate,
                         'amount': prices_list[i] * quantity
                     })
+            else:
+                # Old format - use default discounts (for backward compatibility)
+                selected_products = []
+                for product_name, quantity in zip(products_list, quantities_list):
+                    product_info = product_df[product_df['product_name'] == product_name].iloc[0]
+                    mrp = float(product_info['product_mrp'])
+                    default_discount = float(product_info['product_default_discount'])
+                    price = calculate_price(mrp, default_discount)
+                    tax_rate = float(product_info['product_tax_rate'])
+                    selected_products.append({
+                        'product_id': product_info['product_id'],
+                        'product_name': product_name,
+                        'mrp': mrp,
+                        'discount_percentage': default_discount,
+                        'price': price,
+                        'quantity': quantity,
+                        'tax_rate': tax_rate,
+                        'tax_amount': price * quantity * tax_rate,
+                        'amount': price * quantity
+                    })
             # Create PDF
+            st.write(selected_invoice)
+            st.write(selected_products)
+            st.write(company_settings)
             pdf_buffer = create_pdf_invoice(selected_invoice, selected_products, company_settings)
             pdf_filename = f"Invoice_{invoice_id_gen}.pdf"
             st.markdown(get_pdf_download_link(pdf_buffer, pdf_filename), unsafe_allow_html=True)
