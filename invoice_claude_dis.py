@@ -593,6 +593,40 @@ def main():
     # Company Settings Tab
     with tab2:
         st.write('Previous Invoices Here')
+        invoice_df = load_invoice_data()
+        if invoice_df.empty:
+            st.info("No invoices found.")
+        else:
+            # Ensure required columns are present
+            expected_cols = ['invoice_id', 'customer_name', 'customer_email', 'customer_phone', 'customer_gst']
+            missing = [col for col in expected_cols if col not in invoice_df.columns]
+            if missing:
+                st.error(f"Missing columns in invoice data: {', '.join(missing)}")
+            else:
+                # Filter inputs
+                col1, col2, col3, col4 = st.columns(4)
+                with col1:
+                    gst_filter = st.text_input("GST Number")
+                with col2:
+                    name_filter = st.text_input("Customer Name")
+                with col3:
+                    phone_filter = st.text_input("Phone Number")
+                with col4:
+                    email_filter = st.text_input("Email")
+    
+                # Apply filters
+                filtered_df = invoice_df.copy()
+                if gst_filter:
+                    filtered_df = filtered_df[filtered_df['customer_gst'].str.contains(gst_filter, case=False, na=False)]
+                if name_filter:
+                    filtered_df = filtered_df[filtered_df['customer_name'].str.contains(name_filter, case=False, na=False)]
+                if phone_filter:
+                    filtered_df = filtered_df[filtered_df['customer_phone'].astype(str).str.contains(phone_filter, case=False, na=False)]
+                if email_filter:
+                    filtered_df = filtered_df[filtered_df['customer_email'].str.contains(email_filter, case=False, na=False)]
+    
+                st.write(f"🔍 Showing {len(filtered_df)} of {len(invoice_df)} invoices")
+                st.dataframe(filtered_df)
     # Company Settings Tab
     with tab3:
         st.header("Company Settings")
