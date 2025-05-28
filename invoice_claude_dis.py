@@ -67,7 +67,7 @@ def load_invoice_data(file_path="inglo_delhi_invoices.xlsx"):
     except FileNotFoundError:
         # Create empty invoice dataframe with appropriate columns
         df = pd.DataFrame(columns=[
-            'invoice_id', 'date', 'customer_name', 'customer_email', 
+            'invoice_id', 'date', 'customer_gst','customer_name', 'customer_email', 
             'customer_phone', 'customer_address', 'products', 'quantities',
             'mrps', 'discount_percentages', 'prices', 'subtotal', 'tax', 'total'
         ])
@@ -83,6 +83,7 @@ def load_company_settings(file_path="inglo_delhi_company_settings.json"):
     except FileNotFoundError:
         # Default settings
         default_settings = {
+            "company_gst":"07AAGCI0069N1ZA"
             "company_name": "Inglo Imex Private Limited",
             "company_address": "Sector 8 Dwarka, New Delhi 110077",
             "company_phone": "(+91) 87006-01262",
@@ -122,6 +123,7 @@ def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
         invoice_row = [
         invoice_data["invoice_id"],
         invoice_data["date"],
+        invoice_data["customer_gst"],
         invoice_data["customer_name"],
         invoice_data["customer_email"],
         invoice_data["customer_phone"],
@@ -188,6 +190,7 @@ def create_pdf_invoice(invoice_data, selected_products, company_settings):
     # Create company header table with logo if available
     header_data = []
     company_info = [
+        [Paragraph(f"<b>{company_settings['company_gst']}</b>", normal_style)],
         [Paragraph(f"<b>{company_settings['company_name']}</b>", normal_style)],
         [Paragraph(company_settings['company_address'].replace('\n', '<br/>'), normal_style)],
         [Paragraph(f"Phone: {company_settings['company_phone']}", normal_style)],
@@ -240,6 +243,7 @@ def create_pdf_invoice(invoice_data, selected_products, company_settings):
     # Billing and customer info in a side by side table
     billing_data = [
         [Paragraph("<b>Billed To:</b>", normal_style), ""],
+        [invoice_data['customer_gst'], ""],
         [invoice_data['customer_name'], ""],
         [invoice_data['customer_email'], ""],
         [invoice_data['customer_phone'], ""],
@@ -325,6 +329,7 @@ def main():
         
         # Sidebar for customer information
         st.sidebar.header("Customer Information")
+        customer_gst = st.sidebar.text_input("Customer GST")
         customer_name = st.sidebar.text_input("Customer Name")
         customer_email = st.sidebar.text_input("Customer Email")
         customer_phone = st.sidebar.text_input("Customer Phone")
@@ -460,6 +465,7 @@ def main():
                     invoice_data = {
                         'invoice_id': invoice_id,
                         'date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        'customer_gst': customer_gst,
                         'customer_name': customer_name,
                         'customer_email': customer_email,
                         'customer_phone': customer_phone,
@@ -493,6 +499,7 @@ def main():
                         
                         with invoice_col1:
                             st.markdown("**Bill To:**")
+                            st.markdown(f"{customer_gst}")
                             st.markdown(f"{customer_name}")
                             st.markdown(f"{customer_email}")
                             st.markdown(f"{customer_phone}")
@@ -591,6 +598,7 @@ def main():
         st.header("Company Settings")
         
         st.subheader("Company Information")
+        company_gst = st.text_input("Company GST", value=company_settings['company_gst'])
         company_name = st.text_input("Company Name", value=company_settings['company_name'])
         company_address = st.text_area("Company Address", value=company_settings['company_address'])
         company_phone = st.text_input("Company Phone", value=company_settings['company_phone'])
@@ -624,6 +632,7 @@ def main():
         if st.button("Save Company Settings"):
             # Update settings
             company_settings.update({
+                "company_gst": company_gst,
                 "company_name": company_name,
                 "company_address": company_address,
                 "company_phone": company_phone,
