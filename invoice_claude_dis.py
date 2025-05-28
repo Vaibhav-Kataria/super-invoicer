@@ -124,7 +124,9 @@ def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
         existing_invoices = load_invoice_data(file_path)
         updated_invoices = pd.concat([existing_invoices, pd.DataFrame([invoice_data])], ignore_index=True)
         updated_invoices.to_excel(file_path, index=False)
-    except:
+    except Exception as e:
+        print("Exception occurred:")
+        traceback.print_exc()
         st.write("Unable to proceed with appending records")
     return True
 
