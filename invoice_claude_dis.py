@@ -13,6 +13,19 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 import base64
 from PIL import Image as PILImage
+################ External EXcel Trial Below
+import json
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+# Define the scope
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# Load from secrets
+service_account_info = st.secrets["gcp_service_account"]
+creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+client = gspread.authorize(creds)
+
+################ External EXcel Trial Above
 
 # Set page configuration
 st.set_page_config(page_title="Invoice Generator", layout="wide")
