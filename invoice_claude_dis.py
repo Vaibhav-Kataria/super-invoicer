@@ -60,6 +60,12 @@ def load_product_data(file_path="products.xlsx"):
 def calculate_price(mrp, discount_percentage):
     return mrp * (1 - discount_percentage / 100)
 
+def format_currency(value):
+    try:
+        return f"INR {float(value):.2f}"
+    except:
+        return "N/A"
+
 # Function to load invoice data
 def load_invoice_data(file_path="inglo_delhi_invoices.xlsx"):
     try:
@@ -274,9 +280,9 @@ def create_pdf_invoice(invoice_data, selected_products, company_settings):
         ])
     
     # Add totals row
-    items_data.append(["", "", "", "", "", "Subtotal:", f"INR {invoice_data['subtotal']:.2f}"])
-    items_data.append(["", "", "", "", "", "Tax Total:", f"INR {invoice_data['tax']:.2f}"])
-    items_data.append(["", "", "", "", "", "Total:", f"INR {invoice_data['total']:.2f}"])
+    items_data.append(["", "", "", "", "", "Subtotal:", format_currency(invoice_data['subtotal'])])
+    items_data.append(["", "", "", "", "", "Tax Total:", format_currency(invoice_data['tax'])])
+    items_data.append(["", "", "", "", "", "Total:", format_currency(invoice_data['total']) ])
     
     items_table = Table(items_data, colWidths=[1.8*inch, 0.9*inch, 0.8*inch, 0.9*inch, 0.7*inch, 0.7*inch, 0.9*inch])
     items_table.setStyle(TableStyle([
