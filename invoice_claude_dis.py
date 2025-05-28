@@ -595,6 +595,8 @@ def main():
         st.write('Previous Invoices Here')
         prev_invoices_data = invoice_sheet.get_all_values()
         invoice_df = pd.DataFrame(prev_invoices_data)
+        invoice_df.columns = invoice_df.iloc[0]
+        invoice_df = invoice_df[1:]  # Drop the header row now used as column names
         st.dataframe(invoice_df)
         # invoice_df = pd.DataFrame(prev_invoices_data[1:], columns=prev_invoices_data[0])  # Skip header
         # invoice_df = load_invoice_data()
