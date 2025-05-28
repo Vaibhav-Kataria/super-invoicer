@@ -83,7 +83,7 @@ def load_company_settings(file_path="inglo_delhi_company_settings.json"):
     except FileNotFoundError:
         # Default settings
         default_settings = {
-            "company_gst":"07AAGCI0069N1ZA"
+            "company_gst":"07AAGCI0069N1ZA",
             "company_name": "Inglo Imex Private Limited",
             "company_address": "Sector 8 Dwarka, New Delhi 110077",
             "company_phone": "(+91) 87006-01262",
