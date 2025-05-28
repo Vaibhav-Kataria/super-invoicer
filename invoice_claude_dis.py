@@ -593,7 +593,10 @@ def main():
     # Company Settings Tab
     with tab2:
         st.write('Previous Invoices Here')
-        invoice_df = load_invoice_data()
+        prev_invoices_data = invoice_sheet.get_all_values()
+        invoice_df = pd.DataFrame(prev_invoices_data)
+        # invoice_df = pd.DataFrame(prev_invoices_data[1:], columns=prev_invoices_data[0])  # Skip header
+        # invoice_df = load_invoice_data()
         if invoice_df.empty:
             st.info("No invoices found.")
         else:
