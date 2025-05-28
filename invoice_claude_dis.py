@@ -636,7 +636,7 @@ def main():
         invoice_id_gen = st.text_input("Invoice ID", key="generate_invoice_id")
         if st.button("Generate PDF"):
             # Get the invoice data
-            selected_invoice = invoice_df[invoice_df['invoice_id'] == selected_invoice_id].iloc[0]
+            selected_invoice = invoice_df[invoice_df['invoice_id'] == invoice_id_gen].iloc[0]
             
             # Parse the stored invoice data
             products_list = eval(selected_invoice['products'])
@@ -667,7 +667,7 @@ def main():
                     })
             # Create PDF
             pdf_buffer = create_pdf_invoice(selected_invoice, selected_products, company_settings)
-            pdf_filename = f"Invoice_{selected_invoice_id}.pdf"
+            pdf_filename = f"Invoice_{invoice_id_gen}.pdf"
             st.markdown(get_pdf_download_link(pdf_buffer, pdf_filename), unsafe_allow_html=True)
     # Company Settings Tab
     with tab3:
