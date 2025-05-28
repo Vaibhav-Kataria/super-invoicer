@@ -595,6 +595,7 @@ def main():
         st.write('Previous Invoices Here')
         prev_invoices_data = invoice_sheet.get_all_values()
         invoice_df = pd.DataFrame(prev_invoices_data)
+        st.dataframe(invoice_df)
         # invoice_df = pd.DataFrame(prev_invoices_data[1:], columns=prev_invoices_data[0])  # Skip header
         # invoice_df = load_invoice_data()
         if invoice_df.empty:
