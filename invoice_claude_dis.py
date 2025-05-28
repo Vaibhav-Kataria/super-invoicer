@@ -597,7 +597,7 @@ def main():
         invoice_df = pd.DataFrame(prev_invoices_data)
         invoice_df.columns = invoice_df.iloc[0]
         invoice_df = invoice_df[1:]  # Drop the header row now used as column names
-        st.dataframe(invoice_df)
+        # st.dataframe(invoice_df)
         # invoice_df = pd.DataFrame(prev_invoices_data[1:], columns=prev_invoices_data[0])  # Skip header
         # invoice_df = load_invoice_data()
         if invoice_df.empty:
@@ -633,6 +633,42 @@ def main():
     
                 st.write(f"🔍 Showing {len(filtered_df)} of {len(invoice_df)} invoices")
                 st.dataframe(filtered_df)
+        invoice_id_gen = st.text_input("Invoice ID", key="generate_invoice_id")
+        if st.button("Generate PDF"):
+            # Get the invoice data
+            selected_invoice = invoice_df[invoice_df['invoice_id'] == selected_invoice_id].iloc[0]
+            
+            # Parse the stored invoice data
+            products_list = eval(selected_invoice['products'])
+            quantities_list = eval(selected_invoice['quantities'])
+            
+            # Check if the invoice has the new format with discount info
+            if 'mrps' in selected_invoice and pd.notna(selected_invoice['mrps']):
+                # New format - use stored discount information
+                mrps_list = eval(selected_invoice['mrps'])
+                discount_percentages_list = eval(selected_invoice['discount_percentages'])
+                prices_list = eval(selected_invoice['prices'])
+                
+                selected_products = []
+                for i, (product_name, quantity) in enumerate(zip(products_list, quantities_list)):
+                    product_info = product_df[product_df['product_name'] == product_name].iloc[0]
+                    tax_rate = float(product_info['product_tax_rate'])
+                    
+                    selected_products.append({
+                        'product_id': product_info['product_id'],
+                        'product_name': product_name,
+                        'mrp': mrps_list[i],
+                        'discount_percentage': discount_percentages_list[i],
+                        'price': prices_list[i],
+                        'quantity': quantity,
+                        'tax_rate': tax_rate,
+                        'tax_amount': prices_list[i] * quantity * tax_rate,
+                        'amount': prices_list[i] * quantity
+                    })
+            # Create PDF
+            pdf_buffer = create_pdf_invoice(selected_invoice, selected_products, company_settings)
+            pdf_filename = f"Invoice_{selected_invoice_id}.pdf"
+            st.markdown(get_pdf_download_link(pdf_buffer, pdf_filename), unsafe_allow_html=True)
     # Company Settings Tab
     with tab3:
         st.header("Company Settings")
