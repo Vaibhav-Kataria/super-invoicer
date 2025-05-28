@@ -317,7 +317,7 @@ def main():
     company_settings = load_company_settings()
     
     # Add a tab control for main app and settings
-    tab1, tab2 = st.tabs(["📝 Invoice Generator", "⚙️ Company Settings"])
+    tab1, tab2, tab3 = st.tabs(["📝 Invoice Generator", "🕐 Previous Invoices","⚙️ Company Settings"])
     
     with tab1:
         # Load product data
@@ -585,6 +585,9 @@ def main():
     
     # Company Settings Tab
     with tab2:
+        st.write('Previous Invoices Here')
+    # Company Settings Tab
+    with tab3:
         st.header("Company Settings")
         
         st.subheader("Company Information")
