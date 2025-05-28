@@ -110,10 +110,22 @@ def generate_invoice_id():
     return f"INV-{timestamp}-{unique_id}"
 
 # Function to save invoice data
-def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
+def save_invoice_old(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
     existing_invoices = load_invoice_data(file_path)
     updated_invoices = pd.concat([existing_invoices, pd.DataFrame([invoice_data])], ignore_index=True)
     updated_invoices.to_excel(file_path, index=False)
+    return True
+
+# Function to save invoice data
+def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
+    try:
+        invoice_sheet.append_row(invoice_data)
+        print("Inserted Row in the Drive Sheet")
+        existing_invoices = load_invoice_data(file_path)
+        updated_invoices = pd.concat([existing_invoices, pd.DataFrame([invoice_data])], ignore_index=True)
+        updated_invoices.to_excel(file_path, index=False)
+    except:
+        print("Unable to proceed with appending records")
     return True
 
 # Function to create PDF invoice
