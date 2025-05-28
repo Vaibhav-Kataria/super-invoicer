@@ -119,7 +119,23 @@ def save_invoice_old(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
 # Function to save invoice data
 def save_invoice(invoice_data, file_path="inglo_delhi_invoices.xlsx"):
     try:
-        invoice_sheet.append_row(invoice_data)
+        invoice_row = [
+        invoice_data["invoice_id"],
+        invoice_data["date"],
+        invoice_data["customer_name"],
+        invoice_data["customer_email"],
+        invoice_data["customer_phone"],
+        invoice_data["customer_address"],
+        invoice_data["products"],
+        invoice_data["quantities"],
+        invoice_data["mrps"],
+        invoice_data["discount_percentages"],
+        invoice_data["prices"],
+        invoice_data["subtotal"],
+        invoice_data["tax"],
+        invoice_data["total"]]
+        invoice_sheet.append_row(invoice_row)
+        # invoice_sheet.append_row(invoice_data)
         st.write("Inserted Row in the Drive Sheet")
         existing_invoices = load_invoice_data(file_path)
         updated_invoices = pd.concat([existing_invoices, pd.DataFrame([invoice_data])], ignore_index=True)
