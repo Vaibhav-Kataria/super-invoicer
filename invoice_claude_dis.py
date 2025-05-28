@@ -634,7 +634,7 @@ def main():
                 st.write(f"🔍 Showing {len(filtered_df)} of {len(invoice_df)} invoices")
                 st.dataframe(filtered_df)
         invoice_id_gen = st.text_input("Invoice ID", key="generate_invoice_id")
-        if st.button("Generate PDF"):
+        if st.button("Generate PDF", key="regenerate_older_invoices"):
             # Get the invoice data
             selected_invoice = invoice_df[invoice_df['invoice_id'] == invoice_id_gen].iloc[0]
             
