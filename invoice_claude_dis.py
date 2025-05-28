@@ -612,13 +612,13 @@ def main():
                 # Filter inputs
                 col1, col2, col3, col4 = st.columns(4)
                 with col1:
-                    gst_filter = st.text_input("GST Number")
+                    gst_filter = st.text_input("GST Number", key="filter_gst")
                 with col2:
-                    name_filter = st.text_input("Customer Name")
+                    name_filter = st.text_input("Customer Name", key="filter_name")
                 with col3:
-                    phone_filter = st.text_input("Phone Number")
+                    phone_filter = st.text_input("Phone Number", key="filter_phone")
                 with col4:
-                    email_filter = st.text_input("Email")
+                    email_filter = st.text_input("Email", key="filter_email")
     
                 # Apply filters
                 filtered_df = invoice_df.copy()
