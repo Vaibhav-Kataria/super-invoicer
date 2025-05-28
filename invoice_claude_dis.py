@@ -25,7 +25,12 @@ service_account_info = st.secrets["gcp_service_account"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 client = gspread.authorize(creds)
 
-################ External EXcel Trial Above
+# Connect the spreadsheet file
+spreadsheet = client.open("Inglo_Invoice")  # or open_by_url() or open_by_key()
+# Access a specific worksheet (tab) by name
+invoice_sheet = spreadsheet.worksheet("Invoices")
+catalogue_sheet = spreadsheet.worksheet("Catalogue")
+################ External Excel Trial Above
 
 # Set page configuration
 st.set_page_config(page_title="Invoice Generator", layout="wide")
@@ -33,20 +38,23 @@ st.set_page_config(page_title="Invoice Generator", layout="wide")
 # Function to load product data
 @st.cache_data
 def load_product_data(file_path="products.xlsx"):
-    # try:
-    #     return pd.read_excel(file_path)
-    # except FileNotFoundError:
-    # Create sample product data if file doesn't exist
-    sample_data = {
-        'product_id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-        'product_name': ['Toilet Cleaner 5L','Handwash 5L','Glass Cleaner 5L','Floor Cleaner 5L','Shampoo 20ml Bottles','Shampoo 30ml Bottles','Shampoo 5L','Shower Gel 20ml Bottles','Shower Gel 30ml Bottles','Shower Gel 5L','Moisturiser 20ml Bottles','Moisturiser 30ml Bottles','Conditioner 20ml Bottles','Conditioner 30ml Bottles','Air Freshener 300ml','Air Freshener 5L','Samples','Liquid Soap Dispensers','Soap 10gms','Soap 15gms','Soap 20gms'],            
-        'product_tax_rate': [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
-        'product_mrp':[500,500,500,500,6,8,800,6,8,800,7,9,7,9,149,2000,0,400,4.6,5.4,6],
-        'product_default_discount':[10,50,50,50,25,25,50,25,50,50,50,50,50,50,50,50,50,50,50,50,50]
-    }
-    df = pd.DataFrame(sample_data)
-    df.to_excel("products.xlsx", index=False)
-    return df
+    try:
+        catalogue_data = catalogue_sheet.get_all_values()
+        df = pd.DataFrame(catalogue_data[1:], columns=catalogue_data[0])  # Skip header
+        return df
+    except FileNotFoundError:
+        # Create sample product data if file doesn't exist
+        print("Failed to fetch the drive excel file")
+        sample_data = {
+            'product_id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+            'product_name': ['Toilet Cleaner 5L','Handwash 5L','Glass Cleaner 5L','Floor Cleaner 5L','Shampoo 20ml Bottles','Shampoo 30ml Bottles','Shampoo 5L','Shower Gel 20ml Bottles','Shower Gel 30ml Bottles','Shower Gel 5L','Moisturiser 20ml Bottles','Moisturiser 30ml Bottles','Conditioner 20ml Bottles','Conditioner 30ml Bottles','Air Freshener 300ml','Air Freshener 5L','Samples','Liquid Soap Dispensers','Soap 10gms','Soap 15gms','Soap 20gms'],            
+            'product_tax_rate': [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00],
+            'product_mrp':[500,500,500,500,6,8,800,6,8,800,7,9,7,9,149,2000,0,400,4.6,5.4,6],
+            'product_default_discount':[10,50,50,50,25,25,50,25,50,50,50,50,50,50,50,50,50,50,50,50,50]
+        }
+        df = pd.DataFrame(sample_data)
+        df.to_excel("products.xlsx", index=False)
+        return df
 
 # Function to calculate price based on MRP and discount
 def calculate_price(mrp, discount_percentage):
