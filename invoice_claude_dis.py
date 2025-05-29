@@ -60,6 +60,10 @@ def load_product_data(file_path="products.xlsx"):
 def calculate_price(mrp, discount_percentage):
     return mrp * (1 - discount_percentage / 100)
 
+# Function to calculate tax amount based on price (already multiplied with quantity) and tax rate
+def calculate_tax(price, tax_rate):
+    return price * (1 - tax_rate / 100)
+
 def format_currency(value):
     try:
         return f"INR {float(value):.2f}"
@@ -409,6 +413,7 @@ def main():
             if add_product_submitted:
                 # Add product to session state
                 tax_rate = float(product_info['product_tax_rate'])
+                calculate_tax_amount = calculate_tax(calculated_price * quantity, tax_rate)
                 st.session_state.selected_products.append({
                     'product_id': product_info['product_id'],
                     'product_name': product,
@@ -417,7 +422,7 @@ def main():
                     'price': calculated_price,
                     'quantity': quantity,
                     'tax_rate': tax_rate,
-                    'tax_amount': calculated_price * quantity * tax_rate,
+                    'tax_amount': calculate_tax_amount,
                     'amount': calculated_price * quantity
                 })
                 st.success(f"Added {quantity} x {product} at ₹{calculated_price:.2f} each ({discount_percentage}% discount)")
@@ -572,7 +577,7 @@ def main():
                     for i, (product_name, quantity) in enumerate(zip(products_list, quantities_list)):
                         product_info = product_df[product_df['product_name'] == product_name].iloc[0]
                         tax_rate = float(product_info['product_tax_rate'])
-                        
+                        calculate_tax_amount = calculate_tax(prices_list[i] * quantity, tax_rate)
                         selected_products.append({
                             'product_id': product_info['product_id'],
                             'product_name': product_name,
@@ -581,7 +586,7 @@ def main():
                             'price': prices_list[i],
                             'quantity': quantity,
                             'tax_rate': tax_rate,
-                            'tax_amount': prices_list[i] * quantity * tax_rate,
+                            'tax_amount': calculate_tax_amount,
                             'amount': prices_list[i] * quantity
                         })
                 else:
@@ -593,6 +598,7 @@ def main():
                         default_discount = float(product_info['product_default_discount'])
                         price = calculate_price(mrp, default_discount)
                         tax_rate = float(product_info['product_tax_rate'])
+                        calculate_tax_amount = calculate_tax(price*quantity,tax_rate)
                         selected_products.append({
                             'product_id': product_info['product_id'],
                             'product_name': product_name,
@@ -601,7 +607,7 @@ def main():
                             'price': price,
                             'quantity': quantity,
                             'tax_rate': tax_rate,
-                            'tax_amount': price * quantity * tax_rate,
+                            'tax_amount': calculate_tax_amount,
                             'amount': price * quantity
                         })
                 
@@ -675,7 +681,7 @@ def main():
                 for i, (product_name, quantity) in enumerate(zip(products_list, quantities_list)):
                     product_info = product_df[product_df['product_name'] == product_name].iloc[0]
                     tax_rate = float(product_info['product_tax_rate'])
-                    
+                    calculate_tax_amount = calculate_tax(prices_list[i] * quantity, tax_rate)
                     selected_products.append({
                         'product_id': product_info['product_id'],
                         'product_name': product_name,
@@ -684,7 +690,7 @@ def main():
                         'price': prices_list[i],
                         'quantity': quantity,
                         'tax_rate': tax_rate,
-                        'tax_amount': prices_list[i] * quantity * tax_rate,
+                        'tax_amount': calculate_tax_amount,
                         'amount': prices_list[i] * quantity
                     })
             else:
@@ -696,6 +702,7 @@ def main():
                     default_discount = float(product_info['product_default_discount'])
                     price = calculate_price(mrp, default_discount)
                     tax_rate = float(product_info['product_tax_rate'])
+                    calculate_tax_amount = calculate_tax(price*quantity, tax_rate)
                     selected_products.append({
                         'product_id': product_info['product_id'],
                         'product_name': product_name,
@@ -704,9 +711,10 @@ def main():
                         'price': price,
                         'quantity': quantity,
                         'tax_rate': tax_rate,
-                        'tax_amount': price * quantity * tax_rate,
+                        'tax_amount': calculate_tax_amount,
                         'amount': price * quantity
                     })
+                    # price * quantity * tax_rate,
             # Create PDF
             # st.write(selected_invoice)
             # st.write(selected_products)
