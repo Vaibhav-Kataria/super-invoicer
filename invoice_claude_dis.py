@@ -394,7 +394,7 @@ def main():
             
             with col4:
                 # st.text(f"₹{calculated_price:.2f}")
-                st.text_input("Price",value=f"₹{calculated_price:.2f}", disabled=True)
+                st.text_input("Price",value=f"₹{calculated_price:.2f}", disabled=True, key="calculatedPrice")
             
             with col5:
                 quantity = st.number_input("Quantity", min_value=1, value=1)
@@ -402,7 +402,7 @@ def main():
             with col6:
                 amount = calculated_price * quantity
                 # st.text(f"₹{amount:.2f}")
-                st.text_input("Price",value=f"₹{amount:.2f}", disabled=True)
+                st.text_input("Amount",value=f"₹{amount:.2f}", disabled=True, key="calculatedAmount")
             
             add_product_submitted = st.form_submit_button("Add Product")
             
