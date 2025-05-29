@@ -62,7 +62,7 @@ def calculate_price(mrp, discount_percentage):
 
 # Function to calculate tax amount based on price (already multiplied with quantity) and tax rate
 def calculate_tax(price, tax_rate):
-    return price * (1 - tax_rate / 100)
+    return price * (tax_rate / 100)
 
 def format_currency(value):
     try:
