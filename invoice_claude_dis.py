@@ -345,20 +345,20 @@ def main():
         st.header("Select Products")
         
         # Create columns for product selection interface
-        col1, col2, col3, col4, col5, col6 = st.columns([2.5, 0.8, 0.8, 0.8, 0.8, 1])
+        # col1, col2, col3, col4, col5, col6 = st.columns([2.5, 0.8, 0.8, 0.8, 0.8, 1])
         
-        with col1:
-            st.subheader("Product")
-        with col2:
-            st.subheader("MRP")
-        with col3:
-            st.subheader("Discount %")
-        with col4:
-            st.subheader("Price")
-        with col5:
-            st.subheader("Quantity")
-        with col6:
-            st.subheader("Amount")
+        # with col1:
+        #     st.subheader("Product")
+        # with col2:
+        #     st.subheader("MRP")
+        # with col3:
+        #     st.subheader("Discount %")
+        # with col4:
+        #     st.subheader("Price")
+        # with col5:
+        #     st.subheader("Quantity")
+        # with col6:
+        #     st.subheader("Amount")
         
         # Initialize session state for selected products if not exists
         if 'selected_products' not in st.session_state:
@@ -718,11 +718,11 @@ def main():
         
         st.subheader("Company Information")
         company_gst = st.text_input("Company GST", value=company_settings['company_gst'], disabled=True)
-        company_name = st.text_input("Company Name", value=company_settings['company_name'])
-        company_address = st.text_area("Company Address", value=company_settings['company_address'])
-        company_phone = st.text_input("Company Phone", value=company_settings['company_phone'])
-        company_email = st.text_input("Company Email", value=company_settings['company_email'])
-        company_website = st.text_input("Company Website", value=company_settings['company_website'])
+        company_name = st.text_input("Company Name", value=company_settings['company_name'], disabled=True)
+        company_address = st.text_area("Company Address", value=company_settings['company_address'], disabled=True)
+        company_phone = st.text_input("Company Phone", value=company_settings['company_phone'], disabled=True)
+        company_email = st.text_input("Company Email", value=company_settings['company_email'], disabled=True)
+        company_website = st.text_input("Company Website", value=company_settings['company_website'], disabled=True)
         
         st.subheader("Company Logo")
         # Display current logo if exists
@@ -744,7 +744,7 @@ def main():
             # Update logo path in settings
             company_settings['company_logo_path'] = logo_path
         
-        st.subheader("Invoice Settings")
+        st.subheader("Invoice T&C")
         invoice_terms = st.text_area("Invoice Terms & Conditions", value=company_settings['invoice_terms'])
         
         # Save settings button
